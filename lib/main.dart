@@ -54,5 +54,10 @@ class _MyAppState extends State<MyApp> {
           GlobalWidgetsLocalizations.delegate,
         ],
         home: MainApp(themeManager: _themeManager));
+    //   home: ResponsiveLayout(
+    //   mobileBody: const MobileScaffold(),
+    //   tabletBody: const TabletScaffold(),
+    //   desktopBody: const DesktopScaffold(),
+    // ),
   }
 }

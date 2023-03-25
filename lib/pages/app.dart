@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:portafolio_flutter/theme/theme_constants.dart';
 import 'package:portafolio_flutter/theme/theme_manager.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:portafolio_flutter/widgets/header_title.dart';
 
 class MainApp extends StatefulWidget {
   const MainApp({super.key, required this.themeManager});
@@ -57,6 +58,11 @@ class _MainAppState extends State<MainApp> {
                 widget.themeManager.toggleTheme(newValue);
               })
         ],
+      ),
+      body: Container(
+        child: Center(
+          child: HeaderTitle(),
+        ),
       ),
     );
   }
