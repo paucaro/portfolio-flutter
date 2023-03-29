@@ -13,7 +13,24 @@ class MainApp extends StatefulWidget {
   State<MainApp> createState() => _MainAppState();
 }
 
-class _MainAppState extends State<MainApp> {
+class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
+  late final AnimationController _animationController;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +66,9 @@ class _MainAppState extends State<MainApp> {
               foregroundColor: colorDark,
               shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
             ),
-            onPressed: () {},
+            onPressed: () {
+              _animationController.forward(from: 0.0);
+            },
             child: Text(AppLocalizations.of(context)?.cv ?? ""),
           ),
           Switch(
@@ -61,7 +80,9 @@ class _MainAppState extends State<MainApp> {
       ),
       body: Container(
         child: Center(
-          child: HeaderTitle(),
+          child: WidgetAnimated(
+            animationController: _animationController,
+          ),
         ),
       ),
     );
