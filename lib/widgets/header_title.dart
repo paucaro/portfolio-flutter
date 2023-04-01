@@ -1,9 +1,33 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+import 'dart:math';
 
-class HeaderTitle extends StatelessWidget {
+import 'package:flutter/material.dart';
+
+class HeaderTitle extends StatefulWidget {
   const HeaderTitle({super.key});
+
+  @override
+  State<HeaderTitle> createState() => _HeaderTitleState();
+}
+
+class _HeaderTitleState extends State<HeaderTitle>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _animationController;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+    _animationController.repeat();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +71,13 @@ class HeaderTitle extends StatelessWidget {
             // bottom: 10,
             bottom: 5,
             right: 5,
-            child: Container(
-              height: 50,
-              width: 20,
-              color: Colors.purple,
+            child: WidgetAnimated(
+              const CustomContainerWidget(
+                heigth: 50,
+                width: 20,
+                color: Colors.purple,
+              ),
+              animationController: _animationController,
             ),
           ),
           Container(
@@ -65,18 +92,44 @@ class HeaderTitle extends StatelessWidget {
   }
 }
 
-class WidgetAnimated extends AnimatedWidget {
-  const WidgetAnimated({
+class CustomContainerWidget extends StatelessWidget {
+  const CustomContainerWidget({
     super.key,
-    required Animation<double> animationController,
-  }) : super(listenable: animationController);
+    required this.heigth,
+    required this.width,
+    required this.color,
+  });
+
+  final double heigth;
+  final double width;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: heigth,
+      width: width,
+      color: color,
+    );
+  }
+}
+
+class WidgetAnimated extends AnimatedWidget {
+  const WidgetAnimated(this._widget,
+      {super.key, required Animation<double> animationController})
+      : super(listenable: animationController);
+
+  final Widget _widget;
 
   @override
   Widget build(BuildContext context) {
     final animationValue = listenable as Animation<double>;
-    return Transform.translate(
-      offset: Offset(0.0, (1 - animationValue.value) * 150),
-      child: HeaderTitle(),
+    return ScaleTransition(
+      scale: CurvedAnimation(
+        parent: animationValue,
+        curve: Curves.easeInOut,
+      ),
+      child: _widget,
     );
   }
 }
